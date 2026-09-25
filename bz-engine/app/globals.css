@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -15,9 +17,11 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide default cursor globally */
-* {
-  cursor: none !important;
+/* Custom cursor on a mouse. Touch keeps the system cursor. */
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
 }
 
 /* Prevent text selection on canvas interactions */

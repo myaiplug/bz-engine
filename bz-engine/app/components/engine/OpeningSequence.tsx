@@ -25,45 +25,40 @@ export function OpeningSequence() {
   useEffect(() => {
     const tl = gsap.timeline()
 
-    // Phase 0→1: particles emerge (2s)
-    tl.call(() => setOpeningPhase(1), [], 0.5)
-
-    // Phase 1→2: audio prompt + morphic core materializes (2s)
-    tl.call(() => setOpeningPhase(2), [], 2.5)
-
-    // Phase 2→3: typography fades in (8s)
-    tl.call(() => setOpeningPhase(3), [], 4.5)
+    tl.call(() => setOpeningPhase(1), [], 0.3)
+    tl.call(() => setOpeningPhase(2), [], 0.8)
+    tl.call(() => setOpeningPhase(3), [], 1.1)
 
     // Animate BZ text in
     tl.fromTo(
       bzRef.current,
-      { opacity: 0, scale: 0.85, filter: 'blur(20px)' },
-      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.8, ease: 'expo.out' },
-      4.8
+      { opacity: 0.2, scale: 0.96, filter: 'blur(6px)' },
+      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'expo.out' },
+      0.2
     )
 
     tl.fromTo(
       subtitleRef.current,
-      { opacity: 0, y: 20, filter: 'blur(8px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.4, ease: 'expo.out' },
-      6.0
+      { opacity: 0.35, y: 8 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' },
+      0.45
     )
 
     tl.fromTo(
       taglineRef.current,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 1.0, ease: 'expo.out' },
-      7.0
+      { opacity: 0.4, y: 6 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' },
+      0.6
     )
 
     // Phase 3→4: CTA appears
-    tl.call(() => setOpeningPhase(4), [], 8.5)
+    tl.call(() => setOpeningPhase(4), [], 1.2)
 
     tl.fromTo(
       ctaRef.current,
-      { opacity: 0, y: 16, filter: 'blur(8px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'expo.out' },
-      8.6
+      { opacity: 0.45, y: 8 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' },
+      1.25
     )
 
     return () => { tl.kill() }
@@ -99,8 +94,6 @@ export function OpeningSequence() {
     setOpeningPhase(5)
     // Fade out all text
     gsap.to(containerRef.current, { opacity: 0, duration: 0.8, ease: 'expo.in' })
-    // Tell camera to fly forward
-    const { THREE } = require('three')
     import('three').then(({ Vector3 }) => {
       setCameraTarget(new Vector3(0, 0, -2))
     })
@@ -115,7 +108,17 @@ export function OpeningSequence() {
     <div
       ref={containerRef}
       className="fixed inset-0 flex flex-col items-center justify-center z-20 pointer-events-none"
-      style={{ fontFamily: 'system-ui, sans-serif' }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 30,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        pointerEvents: 'none',
+        fontFamily: 'system-ui, sans-serif',
+      }}
     >
       {/* Audio permission prompt */}
       {openingPhase >= 2 && (
@@ -123,8 +126,9 @@ export function OpeningSequence() {
           ref={audioPromptRef}
           className="pointer-events-auto absolute top-8 flex gap-6 items-center"
           style={{
-            color: 'rgba(255,255,255,0.5)',
-            fontSize: '11px',
+            pointerEvents: 'auto',
+            color: '#f4f4f4',
+            fontSize: '13px',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
           }}
@@ -151,7 +155,7 @@ export function OpeningSequence() {
       <div
         ref={bzRef}
         style={{
-          opacity: 0,
+          opacity: 1,
           fontSize: 'clamp(72px, 14vw, 160px)',
           fontWeight: 700,
           letterSpacing: '-0.04em',
@@ -168,11 +172,11 @@ export function OpeningSequence() {
       <div
         ref={subtitleRef}
         style={{
-          opacity: 0,
-          fontSize: 'clamp(12px, 1.5vw, 16px)',
-          letterSpacing: '0.4em',
+          opacity: 1,
+          fontSize: 'clamp(14px, 1.6vw, 18px)',
+          letterSpacing: '0.28em',
           textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.55)',
+          color: '#f7f7f7',
           marginTop: '16px',
         }}
       >
@@ -183,11 +187,11 @@ export function OpeningSequence() {
       <div
         ref={taglineRef}
         style={{
-          opacity: 0,
-          fontSize: 'clamp(11px, 1.2vw, 14px)',
-          letterSpacing: '0.3em',
+          opacity: 1,
+          fontSize: 'clamp(13px, 1.4vw, 16px)',
+          letterSpacing: '0.22em',
           textTransform: 'uppercase',
-          color: 'rgba(80,120,255,0.85)',
+          color: '#c5d4ff',
           marginTop: '10px',
           height: '20px',
           transition: 'opacity 0.4s ease',
@@ -197,17 +201,19 @@ export function OpeningSequence() {
       </div>
 
       {/* CTA */}
-      {openingPhase >= 4 && (
+      {(
         <button
           
           onClick={handleEnter}
           className="pointer-events-auto mt-16 group"
           style={{
-            opacity: 0,
+            opacity: 1,
+            pointerEvents: 'auto',
             background: 'none',
             border: 'none',
             cursor: 'pointer',
             padding: '0',
+            zIndex: 40,
           }}
         >
           <div
@@ -216,7 +222,7 @@ export function OpeningSequence() {
               fontSize: 'clamp(11px, 1.1vw, 13px)',
               letterSpacing: '0.5em',
               textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.9)',
+              color: '#ffffff',
               padding: '16px 32px',
             }}
           >

@@ -14,12 +14,24 @@ const worldLabels: Record<WorldId, string> = {
   about: 'About',
 }
 
+const WORLDS: { id: WorldId; label: string; line: string }[] = [
+  { id: 'audio', label: 'Audio', line: 'Stem waveforms. Click a strand to solo it.' },
+  { id: 'ai', label: 'AI Systems', line: 'Models, agents, and the systems around them.' },
+  { id: 'software', label: 'Software', line: 'NoDAW and the other products in the stack.' },
+  { id: 'screwai', label: 'ScrewAI', line: 'Time-stretch chamber. Drag the slowdown.' },
+  { id: 'creative', label: 'Creative', line: 'Installations and one-off machines.' },
+  { id: 'automation', label: 'Automation', line: 'The pipes that keep the work moving.' },
+  { id: 'about', label: 'About', line: 'Brian “BZ” Jutz. Creative technologist. Louisville.' },
+]
+
 export function HUDNavigation() {
   const currentWorld = useEngineStore((s) => s.currentWorld)
   const travelTo = useEngineStore((s) => s.travelTo)
   const hasEntered = useEngineStore((s) => s.hasEntered)
 
   if (!hasEntered || currentWorld === 'opening') return null
+
+  const here = WORLDS.find((w) => w.id === currentWorld)
 
   return (
     <>
@@ -30,9 +42,9 @@ export function HUDNavigation() {
           top: '28px',
           left: '32px',
           zIndex: 100,
-          color: 'rgba(255,255,255,0.35)',
-          fontSize: '10px',
-          letterSpacing: '0.35em',
+          color: '#f4f4f4',
+          fontSize: '13px',
+          letterSpacing: '0.22em',
           textTransform: 'uppercase',
           fontFamily: 'system-ui, sans-serif',
           pointerEvents: 'none',
@@ -52,9 +64,9 @@ export function HUDNavigation() {
             zIndex: 100,
             background: 'none',
             border: '1px solid rgba(255,255,255,0.15)',
-            color: 'rgba(255,255,255,0.4)',
-            fontSize: '9px',
-            letterSpacing: '0.3em',
+            color: '#f4f4f4',
+            fontSize: '12px',
+            letterSpacing: '0.18em',
             textTransform: 'uppercase',
             padding: '8px 16px',
             cursor: 'pointer',
@@ -84,9 +96,9 @@ export function HUDNavigation() {
           zIndex: 100,
           background: 'none',
           border: 'none',
-          color: 'rgba(255,255,255,0.25)',
-          fontSize: '9px',
-          letterSpacing: '0.3em',
+          color: '#f4f4f4',
+          fontSize: '12px',
+          letterSpacing: '0.18em',
           textTransform: 'uppercase',
           cursor: 'pointer',
           fontFamily: 'system-ui, sans-serif',
@@ -102,6 +114,53 @@ export function HUDNavigation() {
       >
         About
       </button>
+
+      <nav
+        style={{
+          position: 'fixed',
+          top: '72px',
+          right: '28px',
+          zIndex: 100,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          maxWidth: '280px',
+        }}
+      >
+        {currentWorld !== 'hub' && here ? (
+          <p
+            style={{
+              margin: '0 0 8px',
+              color: '#f7f7f7',
+              fontSize: '15px',
+              lineHeight: 1.45,
+              letterSpacing: '0.01em',
+            }}
+          >
+            {here.line}
+          </p>
+        ) : null}
+        {WORLDS.filter((w) => w.id !== 'about').map((world) => (
+          <button
+            key={world.id}
+            type="button"
+            onClick={() => travelTo(world.id)}
+            style={{
+              textAlign: 'left',
+              background: currentWorld === world.id ? 'rgba(255,255,255,0.14)' : 'rgba(8,8,12,0.72)',
+              border: '1px solid rgba(255,255,255,0.35)',
+              color: '#f7f7f7',
+              fontSize: '13px',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '10px 12px',
+              cursor: 'pointer',
+            }}
+          >
+            {world.label}
+          </button>
+        ))}
+      </nav>
     </>
   )
 }
