@@ -2,6 +2,7 @@
 const nextConfig = {
   output: 'export',
   basePath: '/bz-engine',
+  trailingSlash: true,
   images: { unoptimized: true },
 }
 
