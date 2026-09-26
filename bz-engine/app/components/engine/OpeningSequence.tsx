@@ -30,28 +30,28 @@ export function OpeningSequence() {
   useEffect(() => {
     const interval = setInterval(() => {
       setTaglineIndex((i) => (i + 1) % TAGLINES.length)
-    }, 2400)
+    }, 2200)
     return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
     const tl = gsap.timeline()
 
-    tl.call(() => setOpeningPhase(1), [], 0.4)
-    tl.call(() => setOpeningPhase(2), [], 2.2)
+    tl.call(() => setOpeningPhase(1), [], 0.25)
+    tl.call(() => setOpeningPhase(2), [], 0.6)
 
     tl.fromTo(
       overlineRef.current,
       { opacity: 0, y: 14, filter: 'blur(6px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'expo.out' },
-      3.2
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' },
+      0.7
     )
 
     tl.fromTo(
       ruleRef.current,
       { scaleX: 0 },
-      { scaleX: 1, duration: 1.4, ease: 'power3.inOut' },
-      3.6
+      { scaleX: 1, duration: 1.0, ease: 'power3.inOut' },
+      0.9
     )
 
     tl.fromTo(
@@ -62,34 +62,34 @@ export function OpeningSequence() {
         scale: 1,
         filter: 'blur(0px)',
         letterSpacing: '-0.03em',
-        duration: 1.9,
+        duration: 1.4,
         ease: 'expo.out',
       },
-      3.9
+      1.0
     )
 
     tl.fromTo(
       subtitleRef.current,
       { opacity: 0, y: 18, filter: 'blur(8px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out' },
-      5.2
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' },
+      1.9
     )
 
     tl.fromTo(
       taglineRef.current,
       { opacity: 0 },
-      { opacity: 1, duration: 0.9, ease: 'power2.out' },
-      6.2
+      { opacity: 1, duration: 0.8, ease: 'power2.out' },
+      2.4
     )
 
-    tl.call(() => setOpeningPhase(3), [], 5.4)
-    tl.call(() => setOpeningPhase(4), [], 7.4)
+    tl.call(() => setOpeningPhase(3), [], 2.0)
+    tl.call(() => setOpeningPhase(4), [], 2.6)
 
     tl.fromTo(
       ctaRef.current,
       { opacity: 0, y: 14, filter: 'blur(6px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' },
-      7.5
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' },
+      2.7
     )
 
     return () => {
