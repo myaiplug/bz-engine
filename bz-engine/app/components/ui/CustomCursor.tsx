@@ -11,13 +11,13 @@ export function CustomCursor() {
   const activePortal = useEngineStore((s) => s.activePortal)
 
   const portalColors: Record<string, string> = {
-    audio: '#ffaa40',
-    ai: '#40aaff',
-    software: '#c0c0d0',
-    screwai: '#e060e0',
-    creative: '#40e0a0',
-    automation: '#40c060',
-    design: '#ffffff',
+    audio: '#8fb2ff',
+    ai: '#7fe0d4',
+    software: '#c9c2b4',
+    screwai: '#b39dff',
+    creative: '#8fd4ff',
+    automation: '#7fc4a0',
+    design: '#f4f6fb',
   }
 
   useEffect(() => {
@@ -49,8 +49,8 @@ export function CustomCursor() {
   const color = activePortal
     ? portalColors[activePortal] || '#ffffff'
     : cursorVariant === 'hover'
-    ? '#8899ff'
-    : 'rgba(255,255,255,0.6)'
+    ? '#8fb2ff'
+    : 'rgba(232,234,240,0.55)'
 
   const size = cursorVariant === 'portal' ? 40 : cursorVariant === 'hover' ? 28 : 32
 

@@ -78,16 +78,16 @@ export const particleVertexShader = /* glsl */ `
     // Color based on depth + noise
     float depth = pos.z / 10.0 + 0.5;
     vColor = mix(
-      vec3(0.04, 0.05, 0.12),
-      vec3(0.2, 0.35, 0.85),
+      vec3(0.05, 0.06, 0.11),
+      vec3(0.18, 0.27, 0.60),
       noiseVal * 0.5 + 0.5
     );
-    vColor = mix(vColor, vec3(0.7, 0.8, 1.0), depth * 0.15);
+    vColor = mix(vColor, vec3(0.72, 0.80, 1.0), depth * 0.18);
 
     vAlpha = (1.0 - uProgress) * (0.3 + noiseVal * 0.4);
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = (2.5 + aRandom * 1.5) * (200.0 / -mvPosition.z);
+    gl_PointSize = (1.5 + aRandom * 1.1) * (200.0 / -mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
   }
 `
