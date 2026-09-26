@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { morphicCoreVertexShader, morphicCoreFragmentShader } from '../../shaders/morphicCore.glsl'
 import { useEngineStore } from '../../store/useEngineStore'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 /**
  * The Engine Core — a sculpted obsidian form with an ice-cobalt rim,
@@ -23,6 +24,7 @@ export function MorphicCore({
   const latticeRef = useRef<THREE.Mesh>(null)
   const groupRef = useRef<THREE.Group>(null)
 
+  const isMobile = useIsMobile()
   const mouseNormX = useEngineStore((s) => s.mouseNormX)
   const mouseNormY = useEngineStore((s) => s.mouseNormY)
   const audioFreq = useEngineStore((s) => s.audioFreq)
@@ -84,7 +86,7 @@ export function MorphicCore({
     <group ref={groupRef} visible={visible} scale={scale}>
       {/* Sculpted core */}
       <mesh ref={meshRef}>
-        <icosahedronGeometry args={[1.55, 96]} />
+        <icosahedronGeometry args={[1.55, isMobile ? 24 : 64]} />
         <shaderMaterial
           vertexShader={morphicCoreVertexShader}
           fragmentShader={morphicCoreFragmentShader}

@@ -20,10 +20,8 @@ function MouseTracker() {
 export default function Home() {
   return (
     <main
+      className="app-shell"
       style={{
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
         background: '#06070b',
         cursor: 'none',
       }}

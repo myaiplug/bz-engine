@@ -8,6 +8,7 @@ import {
   portalDiscFragmentShader,
 } from '../../shaders/portalDisc.glsl'
 import { MorphicCore } from '../engine/MorphicCore'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import * as THREE from 'three'
 
 const PORTAL_DATA: {
@@ -68,6 +69,8 @@ const PORTAL_DATA: {
   },
 ]
 
+const tmpScale = new THREE.Vector3()
+
 function Portal({
   data,
   radius,
@@ -84,8 +87,12 @@ function Portal({
   const setCursorVariant = useEngineStore((s) => s.setCursorVariant)
   const { camera } = useThree()
 
+  // Orbital band: ring tilted 55° around X — portals orbit the core
+  // like a gallery of satellites. Nothing blocks the camera axis.
+  const TILT = 0.96 // rad ≈ 55°
   const x = Math.cos(data.angle) * radius
-  const z = Math.sin(data.angle) * radius
+  const y = Math.sin(data.angle) * radius * Math.cos(TILT)
+  const z = Math.sin(data.angle) * radius * Math.sin(TILT)
   const isActive = activePortal === data.id
 
   const discUniforms = useMemo(
@@ -111,17 +118,15 @@ function Portal({
     if (groupRef.current) {
       // billboarding: portals always face the camera
       groupRef.current.lookAt(camera.position)
-      // hover scale
+      // hover scale (hoisted vector — no per-frame allocation)
       const target = isActive ? 1.08 : 1
-      groupRef.current.scale.lerp(
-        new THREE.Vector3(target, target, target),
-        0.12
-      )
+      tmpScale.set(target, target, target)
+      groupRef.current.scale.lerp(tmpScale, 0.12)
     }
   })
 
   return (
-    <group position={[x, 0, z]}>
+    <group position={[x, y, z]}>
       <group ref={groupRef}>
         {/* Ring — thin polished metal, double band */}
         <mesh ref={ringRef}>
@@ -244,9 +249,10 @@ function EnvironmentDome() {
 /** Fine dust motes — depth and scale */
 function DustField() {
   const ref = useRef<THREE.Points>(null)
+  const isMobile = useIsMobile()
 
   const geo = useMemo(() => {
-    const N = 1400
+    const N = isMobile ? 700 : 1400
     const pos = new Float32Array(N * 3)
     for (let i = 0; i < N; i++) {
       const i3 = i * 3
@@ -260,7 +266,7 @@ function DustField() {
     const g = new THREE.BufferGeometry()
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
     return g
-  }, [])
+  }, [isMobile])
 
   useFrame(({ clock }) => {
     if (ref.current) ref.current.rotation.y = clock.getElapsedTime() * 0.008
@@ -281,7 +287,8 @@ function DustField() {
 }
 
 export function HubWorld() {
-  const PORTAL_RADIUS = 5.2
+  const isMobile = useIsMobile()
+  const PORTAL_RADIUS = isMobile ? 5.8 : 5.2
 
   return (
     <group>

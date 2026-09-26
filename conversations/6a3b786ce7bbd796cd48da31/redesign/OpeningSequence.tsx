@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useEngineStore } from '../../store/useEngineStore'
 import { gsap } from 'gsap'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const TAGLINES = [
   'Audio Systems',
@@ -26,32 +27,33 @@ export function OpeningSequence() {
 
   const [taglineIndex, setTaglineIndex] = useState(0)
   const [leaving, setLeaving] = useState(false)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTaglineIndex((i) => (i + 1) % TAGLINES.length)
-    }, 2400)
+    }, 2200)
     return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
     const tl = gsap.timeline()
 
-    tl.call(() => setOpeningPhase(1), [], 0.4)
-    tl.call(() => setOpeningPhase(2), [], 2.2)
+    tl.call(() => setOpeningPhase(1), [], 0.25)
+    tl.call(() => setOpeningPhase(2), [], 0.6)
 
     tl.fromTo(
       overlineRef.current,
       { opacity: 0, y: 14, filter: 'blur(6px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'expo.out' },
-      3.2
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' },
+      0.7
     )
 
     tl.fromTo(
       ruleRef.current,
       { scaleX: 0 },
-      { scaleX: 1, duration: 1.4, ease: 'power3.inOut' },
-      3.6
+      { scaleX: 1, duration: 1.0, ease: 'power3.inOut' },
+      0.9
     )
 
     tl.fromTo(
@@ -62,34 +64,34 @@ export function OpeningSequence() {
         scale: 1,
         filter: 'blur(0px)',
         letterSpacing: '-0.03em',
-        duration: 1.9,
+        duration: 1.4,
         ease: 'expo.out',
       },
-      3.9
+      1.0
     )
 
     tl.fromTo(
       subtitleRef.current,
       { opacity: 0, y: 18, filter: 'blur(8px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out' },
-      5.2
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' },
+      1.9
     )
 
     tl.fromTo(
       taglineRef.current,
       { opacity: 0 },
-      { opacity: 1, duration: 0.9, ease: 'power2.out' },
-      6.2
+      { opacity: 1, duration: 0.8, ease: 'power2.out' },
+      2.4
     )
 
-    tl.call(() => setOpeningPhase(3), [], 5.4)
-    tl.call(() => setOpeningPhase(4), [], 7.4)
+    tl.call(() => setOpeningPhase(3), [], 2.0)
+    tl.call(() => setOpeningPhase(4), [], 2.6)
 
     tl.fromTo(
       ctaRef.current,
       { opacity: 0, y: 14, filter: 'blur(6px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' },
-      7.5
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'expo.out' },
+      2.7
     )
 
     return () => {
@@ -179,16 +181,18 @@ export function OpeningSequence() {
             display: 'inline-block',
           }}
         />
-        <span
-          style={{
-            fontFamily: 'var(--font-mono), monospace',
-            fontSize: '9px',
-            letterSpacing: '0.3em',
-            color: 'rgba(232,234,240,0.4)',
-          }}
-        >
-          CREATIVE TECHNOLOGY
-        </span>
+        {!isMobile && (
+          <span
+            style={{
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '9px',
+              letterSpacing: '0.3em',
+              color: 'rgba(232,234,240,0.4)',
+            }}
+          >
+            CREATIVE TECHNOLOGY
+          </span>
+        )}
       </div>
 
       {/* Wordmark */}
@@ -197,13 +201,14 @@ export function OpeningSequence() {
         style={{
           opacity: 0,
           fontFamily: 'var(--font-display), sans-serif',
-          fontSize: 'clamp(96px, 18vw, 220px)',
+          fontSize: isMobile ? 'clamp(64px, 21vw, 140px)' : 'clamp(96px, 18vw, 220px)',
           fontWeight: 600,
           letterSpacing: '-0.03em',
           lineHeight: 0.95,
           color: '#f4f6fb',
-          textShadow:
-            '0 0 80px rgba(143,178,255,0.35), 0 0 160px rgba(143,178,255,0.12)',
+          textShadow: isMobile
+            ? '0 0 48px rgba(143,178,255,0.35)'
+            : '0 0 80px rgba(143,178,255,0.35), 0 0 160px rgba(143,178,255,0.12)',
           willChange: 'filter, transform, opacity',
         }}
       >
@@ -214,7 +219,7 @@ export function OpeningSequence() {
       <div
         ref={ruleRef}
         style={{
-          width: 'min(380px, 60vw)',
+          width: isMobile ? 'min(240px, 62vw)' : 'min(380px, 60vw)',
           height: '1px',
           marginTop: '34px',
           marginBottom: '30px',
@@ -230,15 +235,53 @@ export function OpeningSequence() {
         ref={subtitleRef}
         style={{
           opacity: 0,
-          fontFamily: 'var(--font-body), sans-serif',
-          fontSize: 'clamp(12px, 1.4vw, 15px)',
-          fontWeight: 400,
-          letterSpacing: '0.42em',
-          textTransform: 'uppercase',
-          color: 'rgba(232,234,240,0.72)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: isMobile ? '8px' : '0px',
         }}
       >
-        Brian Jutz — Creative Technologist
+        <span
+          style={{
+            fontFamily: 'var(--font-body), sans-serif',
+            fontSize: isMobile ? '11px' : 'clamp(12px, 1.4vw, 15px)',
+            fontWeight: 400,
+            letterSpacing: isMobile ? '0.34em' : '0.42em',
+            textIndent: isMobile ? '0.34em' : undefined,
+            textTransform: 'uppercase',
+            color: 'rgba(232,234,240,0.72)',
+            textAlign: 'center',
+          }}
+        >
+          Brian Jutz
+        </span>
+        {isMobile ? (
+          <span
+            style={{
+              fontFamily: 'var(--font-mono), monospace',
+              fontSize: '9px',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: 'rgba(232,234,240,0.45)',
+              textAlign: 'center',
+            }}
+          >
+            Creative Technologist
+          </span>
+        ) : (
+          <span
+            style={{
+              fontFamily: 'var(--font-body), sans-serif',
+              fontSize: 'clamp(12px, 1.4vw, 15px)',
+              letterSpacing: '0.42em',
+              textTransform: 'uppercase',
+              color: 'rgba(232,234,240,0.45)',
+              marginTop: '12px',
+            }}
+          >
+            Creative Technologist
+          </span>
+        )}
       </div>
 
       {/* Cycling taglines */}
@@ -298,13 +341,13 @@ export function OpeningSequence() {
             style={{
               position: 'relative',
               fontFamily: 'var(--font-body), sans-serif',
-              fontSize: '11px',
+              fontSize: isMobile ? '10px' : '11px',
               fontWeight: 500,
-              letterSpacing: '0.5em',
+              letterSpacing: isMobile ? '0.4em' : '0.5em',
               textTransform: 'uppercase',
-              textIndent: '0.5em',
+              textIndent: isMobile ? '0.4em' : '0.5em',
               color: 'rgba(232,234,240,0.9)',
-              padding: '18px 44px',
+              padding: isMobile ? '15px 30px' : '18px 44px',
             }}
           >
             <span className="cta-corner" style={{ top: 0, left: 0, borderWidth: '1px 0 0 1px' }} />

@@ -178,3 +178,45 @@ canvas {
 .cta-label {
   transition: color 0.4s ease, text-shadow 0.4s ease;
 }
+
+
+/* ---------- App shell: stable height on mobile ---------- */
+.app-shell {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ---------- Touch devices ---------- */
+button {
+  touch-action: manipulation;
+}
+
+@media (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+  .cursor-root {
+    display: none !important;
+  }
+  .grain-overlay {
+    display: none;
+  }
+}
+
+/* ---------- Horizontal nav scroller (mobile) ---------- */
+.nav-scroller {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  padding: 8px 4px;
+}
+
+.nav-scroller::-webkit-scrollbar {
+  display: none;
+}
