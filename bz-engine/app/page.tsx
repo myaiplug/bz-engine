@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 import { useMouseTracker } from './hooks/useMouseTracker'
 import { CustomCursor } from './components/ui/CustomCursor'
 import { HUDNavigation } from './components/ui/HUDNavigation'
+import { SystemPanel } from './components/ui/SystemPanel'
 import { OpeningSequence } from './components/engine/OpeningSequence'
 
 // Dynamic import — no SSR for WebGL
@@ -38,6 +39,7 @@ export default function Home() {
 
       {/* HUD Navigation */}
       <HUDNavigation />
+      <SystemPanel />
 
       {/* Atmosphere: grain + vignette */}
       <div className="grain-overlay" />
